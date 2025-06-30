@@ -1,0 +1,10 @@
+CREATE DATABASE MeteoLab_DB;
+USE MeteoLab_DB;
+
+CREATE TABLE data (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    temperature INT(11) NOT NULL,
+    humidity INT(11) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
