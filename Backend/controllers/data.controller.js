@@ -7,7 +7,7 @@ const getData = async (req, res) => {
     // Gestione errori
     try {
         // Richiesta dati
-        const [[data]] = await pool.query('SELECT LAST * FROM data');
+        const [[data]] = await pool.query('SELECT * FROM data ORDER BY date DESC LIMIT 1;');
 
         // Invio risposta finale
         return responseHandler(
