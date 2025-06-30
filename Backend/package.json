@@ -1,28 +1,30 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "Backend of the METEOLAB web app",
-  "main": "server.js",
-  "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "MeteoLab"
-  },
-  "keywords": [
-    "temperature",
-    "humidity",
-    "meteo",
-    "meteolab"
-  ],
-  "author": "Paolo Tomatis",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.0.0",
-    "express": "^5.1.0",
-    "nodemon": "^3.1.10"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend of the METEOLAB web app",
+    "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "dev": "nodemon server.js",
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "MeteoLab"
+    },
+    "keywords": [
+        "temperature",
+        "humidity",
+        "meteo",
+        "meteolab"
+    ],
+    "author": "Paolo Tomatis",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^17.0.0",
+        "express": "^5.1.0",
+        "mysql2": "^3.14.1",
+        "nodemon": "^3.1.10"
+    }
 }
