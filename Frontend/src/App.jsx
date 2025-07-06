@@ -1,5 +1,5 @@
 // Importazione moduli
-import react, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Data from './Data.jsx';
 
 // Componente app

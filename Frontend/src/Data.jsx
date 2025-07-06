@@ -1,14 +1,12 @@
-// Importazione moduli
-import react from 'react';
-
 // Componente data
-const Data = ({ data, type }) => {
+const Data = ({ data, name, type }) => {
     return (
         <div className="data">
             <h3>
-                {type == 'temp' ? 'TEMPERATURA: ' : "UMIDITA': "}
+                {`${name.toUpperCase()} : `}
                 {data}
-                {type == 'temp' ? '°C' : '%'}
+                {type == 'perc' ? '%' : ''}
+                {type == 'temp' ? '°C' : ''}
             </h3>
         </div>
     );

@@ -1,39 +1,28 @@
 // Importazione funzioni
 import pool from '../database/database.js';
 import responseHandler from '../utils/responseHandler.js';
-
-// Funzione per richiedere i dati
-const getData = async (req, res) => {
-    // Gestione errori
-    try {
-        // Richiesta dati
-        const [[data]] = await pool.query('SELECT * FROM data ORDER BY date DESC LIMIT 1;');
-
-        // Invio risposta finale
-        return responseHandler(
-            res,
-            200,
-            true,
-            'Dati richiesti correttamente!',
-            data
-        );
-    } catch (error) {
-        // Invio errore alla console
-        console.error(error);
-        // Invio errore all'utente
-        return responseHandler(res, 500, false, 'Errore interno del server!');
-    }
-};
+import { clients } from '../server.js';
 
 // Funzione per creare i dati
 const postData = async (req, res) => {
     // Gestione errori
     try {
         // Ricevimento dati
-        const { temperature, humidity } = req.body ? req.body.data : {};
+        const { temperature, humidity, light, date } = req.body
+            ? req.body.data
+            : {};
 
         // Controllo dati
-        if (!temperature || isNaN(temperature) || !humidity || isNaN(humidity))
+        if (
+            !temperature ||
+            isNaN(temperature) ||
+            !humidity ||
+            isNaN(humidity) ||
+            !light ||
+            isNaN(light) ||
+            !date ||
+            typeof date !== 'string'
+        )
             return responseHandler(
                 res,
                 400,
@@ -43,9 +32,14 @@ const postData = async (req, res) => {
 
         // Creazione dati
         await pool.query(
-            'INSERT INTO data (temperature, humidity) VALUES (?, ?)',
-            [temperature, humidity]
+            'INSERT INTO data (temperature, humidity, light, date) VALUES (?, ?, ?, ?)',
+            [temperature, humidity, light, date]
         );
+
+        // Invio dati
+        clients.forEach((ws) => {
+            ws.send(JSON.stringify({ temperature, humidity, light, date }));
+        });
 
         // Invio risposta finale
         return responseHandler(res, 200, true, 'Dati creati correttamente!');
@@ -63,7 +57,9 @@ const patchData = async (req, res) => {
     try {
         // Ricevimento dati
         const { id } = req.body ? req.body.where : {};
-        const { temperature, humidity } = req.body ? req.body.data : {};
+        const { temperature, humidity, light, date } = req.body
+            ? req.body.data
+            : {};
 
         // Liste per creazione query
         const fields = [];
@@ -77,6 +73,16 @@ const patchData = async (req, res) => {
         if (humidity && !isNaN(humidity)) {
             fields.push('humidity = ?');
             values.push(humidity);
+        }
+
+        if (light && !isNaN(light)) {
+            fields.push('light = ?');
+            values.push(light);
+        }
+
+        if (date && typeof date == 'string') {
+            fields.push('date = ?');
+            values.push(date);
         }
 
         // Controllo dati
@@ -142,4 +148,4 @@ const deleteData = async (req, res) => {
 };
 
 // Esportazione funzioni
-export { getData, postData, patchData, deleteData };
+export { postData, patchData, deleteData };

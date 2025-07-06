@@ -1,7 +1,6 @@
 // Importazione moduli
 import { Router } from 'express';
 import {
-    getData,
     postData,
     patchData,
     deleteData,
@@ -11,11 +10,7 @@ import {
 const router = Router();
 
 // Rotte per richiesta, creazione, modifica ed eliminazione dei dati
-router
-    .get('/', getData)
-    .post('/', postData)
-    .patch('/', patchData)
-    .delete('/', deleteData);
+router.post('/', postData).patch('/', patchData).delete('/', deleteData);
 
 // Esportazione router
 export default router;

@@ -4,12 +4,19 @@ import cors from 'cors';
 import responseHandler from './utils/responseHandler.js';
 import dataRouter from './routers/data.router.js';
 import { configDotenv } from 'dotenv';
+import http from 'http';
+import { WebSocketServer } from 'ws';
+import pool from './database/database.js';
 
 // Configurazione file .env
 configDotenv();
 
 // Inizializzazione applicazione
 const app = express();
+const server = http.createServer(app);
+
+// Creazione connessione websocket
+const wss = new WebSocketServer({ server });
 
 // Middleware per cors
 app.use(cors());
@@ -20,6 +27,21 @@ app.use(express.urlencoded());
 
 // Rotta per dati
 app.use('/api/data', dataRouter);
+
+// Creazione lista di client
+export const clients = [];
+
+// Web Sockets
+wss.on('connection', async (ws) => {
+    clients.push(ws);
+
+    // Richiesta dati
+    const [[data]] = await pool.query(
+        'SELECT * FROM data ORDER BY date DESC LIMIT 1;'
+    );
+
+    ws.send(JSON.stringify(data));
+});
 
 // Rotta per errori 404
 app.use((req, res) => {
@@ -32,6 +54,6 @@ app.use((req, res) => {
 });
 
 // Avvio dell'applicazione
-app.listen(process.env.PORT, () =>
+server.listen(process.env.PORT, () =>
     console.log('Server avviato alla porta ', process.env.PORT)
 );
